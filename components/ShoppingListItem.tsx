@@ -1,5 +1,6 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../theme";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 type Props = {
   name: string;
@@ -25,26 +26,27 @@ export function ShoppingListItem({ name, isCompleted }: Props) {
     )
   }
   return (
-    <View style={[
-      styles.itemContainer,
-      isCompleted ? styles.completedContainer : undefined,
-    ]}>
-      <Text style={[
-        styles.itemText,
-        isCompleted ? styles.completedText : undefined,
-      ]}>
+    <View
+      style={[
+        styles.itemContainer,
+        isCompleted ? styles.completedContainer : undefined,
+      ]}
+    >
+      <Text
+        style={[
+          styles.itemText,
+          isCompleted ? styles.completedText : undefined,
+        ]}
+      >
         {name}
       </Text>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          isCompleted ? styles.completedButton : undefined,
-        ]}
-        activeOpacity={0.8}
-        onPress={handleDelete}
-      >
-        <Text style={styles.buttonText}>Delete</Text>
-    </TouchableOpacity>
+      <TouchableOpacity activeOpacity={0.8} onPress={handleDelete} >
+        <AntDesign
+          name="closecircle"
+          size={24}
+          color={isCompleted ? theme.colorGrey : theme.colorRed}
+        />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     borderBottomWidth: 1,
     borderBottomColor: theme.colorCerulean,
-    paddingHorizontal: 8,
+    paddingHorizontal: 18,
     paddingVertical: 16,
     flexDirection: "row",
     alignItems: "center",
@@ -72,18 +74,4 @@ const styles = StyleSheet.create({
     textDecorationColor: theme.colorGrey,
     color: theme.colorGrey,
   },
-  button: {
-    backgroundColor: theme.colorBlack,
-    padding: 8,
-      borderRadius: 6,
-    },
-    completedButton: {
-      backgroundColor: theme.colorGrey
-    },
-    buttonText: {
-      color: theme.colorWhite,
-      fontWeight: "bold",
-      textTransform: "uppercase",
-      letterSpacing: 1
-    },
 });
