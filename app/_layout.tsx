@@ -23,6 +23,7 @@ export default function Layout() {
           tabBarIcon: ({ color, size }) => {
             return <AntDesign name="clockcircleo" size={size} color={color} />
           },
+          headerShown: false
         }}
       />
       <Tabs.Screen
