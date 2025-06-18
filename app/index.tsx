@@ -7,31 +7,17 @@ type ShoppingListItemType = {
   id: string;
   name: string;
   completedAtTimestamp?: number;
+  lastUpdatedTimestamp: number;
 };
 
-const initialList: ShoppingListItemType[] = [
-  { id: '1', name: 'Coffee' },
-  { id: '2', name: 'Tea' },
-  { id: '3', name: 'Milk' },
-  { id: '4', name: 'Sugar' },
-  { id: '5', name: 'Chicken' },
-  { id: '6', name: 'Yoghurt' },
-  { id: '7', name: 'Oats' },
-  { id: '8', name: 'Blueberries' },
-  { id: '9', name: 'Cheese' },
-  { id: '10', name: 'Crackers' },
-  { id: '11', name: 'Eggs' },
-  { id: '12', name: 'Bread' },
-]
-
 export default function App() {
-  const [shoppingList, setShoppingList] = useState<ShoppingListItemType[]>(initialList);
+  const [shoppingList, setShoppingList] = useState<ShoppingListItemType[]>([]);
   const [value, setValue] = useState<string>();
 
   const handleSubmit = () => {
     if (value) {
       const newShoppingList = [
-        { id: new Date().toISOString(), name: value },
+        { id: new Date().toISOString(), name: value, lastUpdatedTimestamp: Date.now() },
         ...shoppingList,
       ];
       setShoppingList(newShoppingList);
@@ -49,7 +35,10 @@ export default function App() {
       if (item.id === id) {
         return {
           ...item,
-          completedAtTimestamp: item.completedAtTimestamp ? undefined : Date.now()
+          completedAtTimestamp: item.completedAtTimestamp
+            ? undefined
+            : Date.now(),
+          lastUpdatedTimestamp: Date.now(),
         }
       }
       return item;
@@ -59,7 +48,7 @@ export default function App() {
 
   return (
     <FlatList
-      data={shoppingList}
+      data={orderList(shoppingList)}
       stickyHeaderIndices={[0]}
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
@@ -91,6 +80,23 @@ export default function App() {
   );
 }
 
+function orderList(shoppingList: ShoppingListItemType[]) {
+  return shoppingList.sort((a, b) => {
+    if (a.completedAtTimestamp && b.completedAtTimestamp) {
+      return b.completedAtTimestamp - a.completedAtTimestamp
+    }
+    if (a.completedAtTimestamp && !b.completedAtTimestamp) {
+      return 1
+    }
+    if (!a.completedAtTimestamp && b.completedAtTimestamp) {
+      return -1
+    }
+    if (!a.completedAtTimestamp && !b.completedAtTimestamp) {
+      return b.lastUpdatedTimestamp - a.lastUpdatedTimestamp
+    }
+    return 0;
+  })
+}
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colorWhite,
