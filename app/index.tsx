@@ -6,6 +6,7 @@ import { useState } from "react";
 type ShoppingListItemType = {
   id: string;
   name: string;
+  completedAtTimestamp?: number;
 };
 
 const initialList: ShoppingListItemType[] = [
@@ -39,8 +40,20 @@ export default function App() {
   };
 
   const handleDelete = (id: string) => {
-    console.log("deleting item... ", id)
     const newShoppingList = shoppingList.filter(item => item.id !== id)
+    setShoppingList(newShoppingList);
+  }
+
+  const handleComplete = (id: string) => {
+    const newShoppingList = shoppingList.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          completedAtTimestamp: item.completedAtTimestamp ? undefined : Date.now()
+        }
+      }
+      return item;
+    })
     setShoppingList(newShoppingList);
   }
 
@@ -66,7 +79,13 @@ export default function App() {
         />
       }
       renderItem={({ item }) => {
-        return <ShoppingListItem name={item.name} key={item.id} onDelete={() => handleDelete(item.id)}/>
+        return <ShoppingListItem
+        name={item.name}
+        key={item.id}
+        onDelete={() => handleDelete(item.id)}
+        onToggleComplete={() => handleComplete(item.id)}
+        isCompleted={Boolean(item.completedAtTimestamp)}
+      />
       }}
     />
   );
