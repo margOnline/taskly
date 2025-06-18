@@ -6,6 +6,7 @@ import { useState } from "react";
 type ShoppingListItemType = {
   id: string;
   name: string;
+  completedAtTimestamp?: number;
 };
 
 const initialList: ShoppingListItemType[] = [
@@ -38,6 +39,24 @@ export default function App() {
     }
   };
 
+  const handleDelete = (id: string) => {
+    const newShoppingList = shoppingList.filter(item => item.id !== id)
+    setShoppingList(newShoppingList);
+  }
+
+  const handleComplete = (id: string) => {
+    const newShoppingList = shoppingList.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          completedAtTimestamp: item.completedAtTimestamp ? undefined : Date.now()
+        }
+      }
+      return item;
+    })
+    setShoppingList(newShoppingList);
+  }
+
   return (
     <FlatList
       data={shoppingList}
@@ -49,7 +68,7 @@ export default function App() {
           <Text>Your shopping list is empty</Text>
         </View>
       }
-      ListHeaderComponent={() => (
+      ListHeaderComponent={
         <TextInput
           value={value}
           style={styles.textInput}
@@ -58,9 +77,15 @@ export default function App() {
           onSubmitEditing={handleSubmit}
           returnKeyType="done"
         />
-      )}
+      }
       renderItem={({ item }) => {
-        return <ShoppingListItem name={item.name} />
+        return <ShoppingListItem
+        name={item.name}
+        key={item.id}
+        onDelete={() => handleDelete(item.id)}
+        onToggleComplete={() => handleComplete(item.id)}
+        isCompleted={Boolean(item.completedAtTimestamp)}
+      />
       }}
     />
   );
@@ -69,7 +94,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colorWhite,
-    paddingTop: 12,
+    paddingVertical: 12,
     flex: 1,
   },
   contentContainer: {
@@ -87,6 +112,7 @@ const styles = StyleSheet.create({
   },
   listEmptyContainer: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    marginVertical: 18
   }
 })
