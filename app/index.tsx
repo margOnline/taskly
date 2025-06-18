@@ -39,6 +39,7 @@ export default function App() {
   };
 
   const handleDelete = (id: string) => {
+    console.log("deleting item... ", id)
     const newShoppingList = shoppingList.filter(item => item.id !== id)
     setShoppingList(newShoppingList);
   }
@@ -65,7 +66,7 @@ export default function App() {
         />
       }
       renderItem={({ item }) => {
-        return <ShoppingListItem name={item.name} key={item.id} onDelete={handleDelete(item.id)}/>
+        return <ShoppingListItem name={item.name} key={item.id} onDelete={() => handleDelete(item.id)}/>
       }}
     />
   );
