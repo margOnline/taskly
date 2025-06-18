@@ -54,7 +54,7 @@ export default function App() {
           <Text>Your shopping list is empty</Text>
         </View>
       }
-      ListHeaderComponent={() => (
+      ListHeaderComponent={
         <TextInput
           value={value}
           style={styles.textInput}
@@ -63,7 +63,7 @@ export default function App() {
           onSubmitEditing={handleSubmit}
           returnKeyType="done"
         />
-      )}
+      }
       renderItem={({ item }) => {
         return <ShoppingListItem name={item.name} key={item.id} onDelete={handleDelete(item.id)}/>
       }}
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
   },
   listEmptyContainer: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    marginVertical: 18
   }
 })
