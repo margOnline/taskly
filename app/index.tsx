@@ -33,15 +33,15 @@ export default function App() {
         { id: new Date().toISOString(), name: value, lastUpdatedTimestamp: Date.now() },
         ...shoppingList,
       ];
-      saveToStorage(storageKey, shoppingList)
       setShoppingList(newShoppingList);
+      saveToStorage(storageKey, shoppingList)
       setValue(undefined);
     }
   };
 
   const handleDelete = (id: string) => {
     const newShoppingList = shoppingList.filter(item => item.id !== id)
-    saveToStorage(storageKey, shoppingList)
+    saveToStorage(storageKey, newShoppingList);
     setShoppingList(newShoppingList);
   }
 
@@ -58,7 +58,7 @@ export default function App() {
       }
       return item;
     })
-    saveToStorage(storageKey, shoppingList)
+    saveToStorage(storageKey, newShoppingList);
     setShoppingList(newShoppingList);
   }
 
