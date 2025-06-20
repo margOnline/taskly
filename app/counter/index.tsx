@@ -3,8 +3,33 @@ import * as Device from "expo-device";
 import * as Notifications from 'expo-notifications'
 import { registerForPushNotificationsAsync } from '../utils/registerForPushnotificationsAsync';
 import { theme } from '../../theme';
+import { Duration, isBefore, intervalToDuration } from 'date-fns';
+import { useEffect, useState } from 'react';
 
+const timestamp = Date.now() + 10 * 1000
+type CountdownStatus = {
+  isOverdue: boolean;
+  distance: Duration
+}
 export default function CounterScreen() {
+  const [status, setStatus] = useState<CountdownStatus>({
+    isOverdue: false,
+    distance: {}
+  });
+
+  console.log(status);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const isOverdue = isBefore(timestamp, Date.now())
+      const distance = intervalToDuration(
+        isOverdue
+          ? { start: timestamp, end: Date.now() }
+          : { start: Date.now(), end: timestamp }
+      );
+      setStatus({ isOverdue, distance })
+    }, 1000);
+  })
+
   const scheduleNotificaton = async () => {
     const result = await registerForPushNotificationsAsync();
     if (result === "granted") {
