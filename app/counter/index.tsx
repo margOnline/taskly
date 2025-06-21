@@ -5,6 +5,7 @@ import { registerForPushNotificationsAsync } from '../utils/registerForPushnotif
 import { theme } from '../../theme';
 import { Duration, isBefore, intervalToDuration } from 'date-fns';
 import { useEffect, useState } from 'react';
+import { TimeSegment } from '../../components/TimeSegment';
 
 const timestamp = Date.now() + 10 * 1000
 type CountdownStatus = {
@@ -17,7 +18,6 @@ export default function CounterScreen() {
     distance: {}
   });
 
-  console.log(status);
   useEffect(() => {
     const intervalId = setInterval(() => {
       const isOverdue = isBefore(timestamp, Date.now())
@@ -28,6 +28,10 @@ export default function CounterScreen() {
       );
       setStatus({ isOverdue, distance })
     }, 1000);
+
+    return () => {
+      clearInterval(intervalId)
+    }
   })
 
   const scheduleNotificaton = async () => {
@@ -52,7 +56,18 @@ export default function CounterScreen() {
     }
   };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, status.isOverdue ? styles.containerLate : undefined]}>
+      {status.isOverdue ? (
+        <Text style={styles.heading}>Thing is overdue by</Text>
+      ) : (
+        <Text style={styles.heading}>Thing is due in...</Text>
+      )}
+      <View style={styles.row}>
+        <TimeSegment unit="Days" number={status.distance.days ?? 0} />
+        <TimeSegment unit="Hours" number={status.distance.hours ?? 0} />
+        <TimeSegment unit="Minutes" number={status.distance.minutes ?? 0} />
+        <TimeSegment unit="Seconds" number={status.distance.seconds ?? 0} />
+      </View>
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
@@ -71,6 +86,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
+  containerLate: {
+    backgroundColor: theme.colorRed
+  },
   button: {
     backgroundColor: theme.colorBlack,
     padding: 12,
@@ -81,5 +99,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 1,
+  },
+  row: {
+    flexDirection: "row",
+    marginBottom: 24,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 24,
   }
 })
