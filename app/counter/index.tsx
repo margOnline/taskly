@@ -56,24 +56,45 @@ export default function CounterScreen() {
     }
   };
   return (
-    <View style={[styles.container, status.isOverdue ? styles.containerLate : undefined]}>
+    <View
+      style={[
+        styles.container,
+        status.isOverdue ? styles.containerLate : undefined,
+      ]}
+    >
       {status.isOverdue ? (
-        <Text style={styles.heading}>Thing is overdue by</Text>
+        <Text style={[styles.heading, styles.whiteText]}>Thing is overdue by</Text>
       ) : (
         <Text style={styles.heading}>Thing is due in...</Text>
       )}
       <View style={styles.row}>
-        <TimeSegment unit="Days" number={status.distance.days ?? 0} />
-        <TimeSegment unit="Hours" number={status.distance.hours ?? 0} />
-        <TimeSegment unit="Minutes" number={status.distance.minutes ?? 0} />
-        <TimeSegment unit="Seconds" number={status.distance.seconds ?? 0} />
+        <TimeSegment
+          unit="Days"
+          number={status.distance.days ?? 0}
+          textStyle={status.isOverdue ? styles.whiteText : undefined}
+        />
+        <TimeSegment
+          unit="Hours"
+          number={status.distance.hours ?? 0}
+          textStyle={status.isOverdue ? styles.whiteText : undefined}
+        />
+        <TimeSegment
+          unit="Minutes"
+          number={status.distance.minutes ?? 0}
+          textStyle={status.isOverdue ? styles.whiteText : undefined}
+        />
+        <TimeSegment
+          unit="Seconds"
+          number={status.distance.seconds ?? 0}
+          textStyle={status.isOverdue ? styles.whiteText : undefined}
+        />
       </View>
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
         onPress={scheduleNotificaton}
       >
-        <Text style={styles.buttonText}>Schedule notification</Text>
+        <Text style={styles.buttonText}>Ive done the thing!</Text>
       </TouchableOpacity>
     </View>
   )
@@ -108,5 +129,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 24,
+  },
+  whiteText: {
+    color: theme.colorWhite
   }
 })
