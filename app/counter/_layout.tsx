@@ -25,6 +25,7 @@ export default function Layout() {
           },
         }}
       />
+      <Stack.Screen name="history" options={{ title: "History" }} />
     </Stack>
   )
 }
